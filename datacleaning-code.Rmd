@@ -1,0 +1,39 @@
+---
+title: '...'
+author: "Ziqing Lyu"
+date: "22/12/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r echo=FALSE, include=FALSE}
+#install.packages("labelled")
+library(labelled)
+library(haven)
+library(tidyverse)
+# get dta.data from file
+getwd()
+data<-read_dta("usa_00006.dta")
+data <- labelled::to_factor(data)
+
+# select some interesting variables
+mydata <-
+  data %>% select(region, sex, age, marst, educ, incwage)
+
+mydata$age<-as.numeric(mydata$age)
+mydata$incwage<-as.numeric(mydata$incwage)
+
+# select observation which at least 18 years old
+mydata<- mydata %>% filter(age >= 18 & age <= 65)
+#glimpse(mydata)
+
+# remove missing value
+mydata <-na.omit(mydata)
+
+# save as csv file
+write_csv(mydata, "mydata2.csv")
+
+```
